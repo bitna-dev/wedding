@@ -1,0 +1,34 @@
+@import '@scss/utils.scss';
+
+.container {
+  @include txt-content;
+  .icon-flower {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+  }
+  .wrap-person {
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 1.4;
+    font-weight: bold;
+    margin: 2px 0 8px;
+
+    .icon-heart {
+      fill: var(--red);
+      width: 16px;
+      height: 16px;
+      margin: 0 6px;
+    }
+  }
+
+  .wrap-location {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+}

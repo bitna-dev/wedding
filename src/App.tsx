@@ -1,26 +1,85 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import classNames from 'classnames/bind'
+import styles from './App.module.scss'
+import { useEffect, useState } from 'react'
+import FullScreenMessage from '@shared/FullScreenMessage'
+import Heading from '@sections/Heading'
+import Video from '@sections/Video'
+import { Wedding } from '@modles/wedding'
+import ImageGallery from './components/sections/ImageGallery'
+import Intro from './components/sections/Intro'
+import Invitation from './components/sections/Invitation'
+import Calendar from './components/sections/Calendar'
+import Map from './components/sections/Map'
+import Contact from './components/sections/Contact'
+import Share from './components/sections/Share'
+
+const cx = classNames.bind(styles)
 
 function App() {
+  const [wedding, setWedding] = useState<Wedding | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  useEffect(() => {
+    setLoading(true)
+    fetch(`http://localhost:8888/wedding`)
+      .then((response) => {
+        if (response.ok === false) {
+          throw new Error('청첩장 정보를 불러오지 못했습니다.')
+        }
+        return response.json()
+      })
+      .then((data) => {
+        console.log(data)
+        setWedding(data)
+      })
+      .catch((err) => {
+        console.log(err)
+        setError(true)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  if (loading) {
+    return <FullScreenMessage type="loading" />
+  }
+  if (error) {
+    return <FullScreenMessage type="error" />
+  }
+  if (wedding == null) {
+    return null
+  }
+  const {
+    date,
+    galleryImages,
+    groom,
+    bride,
+    location,
+    message: { intro, invitation },
+  } = wedding
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <div className={cx('container')}>
+        <Heading date={date} />
+        <Video />
+        <Intro
+          groomName={groom.name}
+          brideName={bride.name}
+          location={location.name}
+          date={date}
+          message={intro}
+        />
+        <Invitation message={invitation} />
+        <ImageGallery images={galleryImages} />
+        <Calendar date={date} />
+        <Map location={location} />
+        <Contact groom={groom} bride={bride} />
+        <Share groomName={groom.name} brideName={bride.name} date={date} />
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App

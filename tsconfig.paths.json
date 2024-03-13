@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@shared/*": ["src/components/shared/*"],
+      "@sections/*": ["src/components/sections/*"],
+      "@modles/*": ["src/models/*"],
+      "@scss/*": ["src/scss/*"]
+    }
+  }
+}
